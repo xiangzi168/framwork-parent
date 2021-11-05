@@ -1,0 +1,121 @@
+/**
+ * @file        inventory.proto
+ * @author     Jemmy
+ * @date       2021/3/26 19:40
+ * @desc
+ */
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "InventoryStoreGTO";
+
+package inventorypb;
+
+service InventoryStoreSrv {
+  // GetSPUSizeTable 获取某个 spu 的尺码表，包括操作者
+  rpc GetSPUSizeTable(GetSPUSizeTableReq) returns(GetSPUSizeTableReply) {};
+  // GetCateIDSizeTable 获取某个类目的尺码表，包括类目信息
+  rpc GetCateIDSizeTable(GetCateIDSizeTableReq) returns(GetCateIDSizeTableReply){};
+}
+
+
+message GetSPUSizeTableReq {
+  // spu_code
+  string spu_code = 1;
+}
+message GetSPUSizeTableReply {
+  // has_suits=false 时有效，表示没有套装，只绑定了一个尺码表
+  SizeTable size_table = 1;
+  // 此尺码表是否属于 spu (false 时表示此尺码表属于当前 spu 的后台类目，从最后一层级逐级查找对应的类目尺码表，找到一个立马返回)
+  bool is_own = 2;
+  string requestId = 4;
+}
+
+message GetCateIDSizeTableReq {
+  // cate_id
+  string cate_id = 1;
+}
+
+message GetCateIDSizeTableReply {
+  // has_suits=false 时有效，表示没有套装，只绑定了一个尺码表
+  SizeTable size_table = 1;
+  // 此尺码表是否属于当前类目(false 时表示此尺码表属于当前类目的更高层级类目)
+  bool is_own = 2;
+  string requestId = 4;
+}
+
+// ---------------------------------------------------------------
+// KV 表示一个键值对
+message KV {
+  // key
+  string key = 1;
+  // value
+  string value = 2;
+}
+
+// SizeEntity 代表一个尺码实例, 如 XS 这一行，其中包含了 n 个国家，m 个身体部位的尺寸
+message Size {
+  // 在尺寸表中的顺序
+  int32 index = 1;
+  // 度量维度
+  repeated KV names = 2;
+  // 国家
+  repeated KV countries = 3;
+  // 身体部位
+  repeated KV body_parts = 4;
+}
+
+// SizeTableEntity 尺码表的尺码信息
+message SizeTableEntity {
+  repeated Size sizes = 1;
+}
+
+// Suit 表示一个套装
+message Suit {
+  // 套装名称
+  string name = 1;
+  // 套装对应的尺码信息
+  SizeTableEntity size_table = 2;
+}
+
+// SizeEntity 表示一个尺码表的实际内容
+message SizeEntity {
+  // 是否有套装
+  bool has_suit = 1;
+  // has_suit=true 时有效，表示当前尺码表拥有的套装信息
+  repeated Suit suits = 2;
+  // has_suit=false 时有效，表示当前尺码表拥有的一个尺码信息
+  SizeTableEntity size_table = 3;
+}
+
+message Tip {
+  // 身体部位的测量提示
+  repeated string body_part_desc = 1;
+  // 图片提示
+  string body_part_img = 2;
+  // 底部建议
+  string comment = 3;
+}
+
+// SizeTable 表示一个尺码表实例，如某个类目的尺码表 或 某个 spu 的尺码表
+message SizeTable {
+  // 不同的尺码，其中有套装相关的
+  SizeEntity size_entity = 1;
+  // 尺码表底部的描述信息
+  Tip tip = 2;
+  // 尺码表名称
+  string name = 3;
+  // id 尺码表唯一
+  string id = 4;
+  // 是否平铺展示
+  bool is_tiled = 5;
+  // 最后一次修改者
+  string author = 6;
+  // 创建时间
+  int64 created_at = 7;
+  // 最后一次更新时间
+  int64 updated_at = 8;
+}

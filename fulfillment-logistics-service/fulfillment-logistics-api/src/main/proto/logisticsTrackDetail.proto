@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "LogisticsTrackDetailGTO";
+
+package logisticsTrack;
+
+/**
+*  查询物流轨迹详情
+ */
+
+message GetLogisticsTrackDetailRequest {
+  // 追踪号 ----------必填
+  string logistics_tracking_code = 1;
+}
+
+message LogisticsTrackDetailResponse {
+  // 包裹类型  1 境外发货单  2 AE 发货单
+  int32 type = 1;
+  // 创建时间(纳秒级)
+  int64 create_time = 2;
+  // 最新物流节点
+  string logisticsNode = 3;
+  // 详情(物流轨迹)
+  repeated TrackDetailResponse trackList = 4;
+}
+
+message TrackDetailResponse {
+  // 节点名称
+  string node_name = 1;
+  // 中文释义
+  string node_desc = 2;
+  // 内部节点中文
+  //1、若为AE包裹，枚举值：妥投、到达待取、商家取消发货、包裹退回
+  //2、若非AE包裹，枚举值：操作仓出库、物流商揽件、国内退回、物流商出库、转运延误、清关异常、到达待取、投递失败、可能异常、海外退回、成功签收
+  string inside_cn = 3;
+  // 内部节点英文
+  InsideNodeEnum insideEn = 4;
+  // 物流轨迹(没有枚举，以实际内容为中)
+  string content = 5;
+  // 时间(纳秒级)
+  int64 track_time = 7;
+}
+
+message LogisticsTrackDetailResponseReply {
+  // 100200 请求成功 100400 请求异常
+  string error_code = 1;
+  // 异常信息
+  string msg = 2;
+  bool success = 3;
+  string request_id = 4;
+  // 物流轨迹详情
+  LogisticsTrackDetailResponse data = 5;
+}
+
+service LogisticsTrackDetail{
+  rpc getLogisticsTrackDetail(GetLogisticsTrackDetailRequest) returns(LogisticsTrackDetailResponseReply) {}
+}
+
+enum InsideNodeEnum{
+  // 默认未定义
+  DEFAULT = 0;
+  //物流商揽收
+  ABROAD_CARRIER_RECEIVED = 10;
+  //物流商出库
+  ABROAD_DEPARTED_FROMLC = 20;
+  //国内退回
+  ABROAD_DOMESTIC_RETURN = 30;
+  //清关异常
+  ABROAD_CUSTOMS_ABNORMAL = 40;
+  //到达待取
+  ABROAD_PICK_UP = 50;
+  //投递失败
+  ABROAD_UNDELIVERED = 60;
+  //包裹丢失
+  ABROAD_PARCEL_LOST = 70;
+  //成功签收
+  ABROAD_DELIVERED = 80;
+  //海外退回
+  ABROAD_RETURNED = 90;
+  //可能异常
+  ABROAD_ALERT = 100;
+  //转运延误
+  ABROAD_TRANSIT_DELAY = 110;
+
+  // 妥投
+  AE_DELIVERED = 200;
+  // 到达待取
+  AE_ARRIVE = 210;
+  // 商家取消发货
+  AE_CANNCEL = 220;
+  // 包裹退回
+  AE_BACK = 230;
+
+}
+

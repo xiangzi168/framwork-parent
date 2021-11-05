@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "ChannelOrderLogisticsGTO";
+
+message updateChannelOrderIdRequest
+{
+    string oldChannelOrderId = 1;     //老的渠道订单号
+    string newChannelOrderId =2;      //新的渠道订单号
+}
+message updateChannelOrderIdResult
+{
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    bool data = 5;     //修改成功true  失败false
+}
+message ChannerOrderIdResponseResult
+{
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated string data = 5;     //渠道 id 集合
+}
+
+message ChannelOrderLogisticsRequest {
+    int32 type = 1;     //1  1688 渠道订单   5 PDD   6 淘宝
+    repeated string channelOrderIdList = 2;     //渠道订单集合
+}
+
+message ChannelOrderLogisticsResponse
+{
+    string channelOrderId = 1;
+    repeated ChannelOrderLogisticsItemResponse itemList = 2;        //物流信息
+}
+
+message ChannelOrderLogisticsItemResponse
+{
+    // @Deprecated
+    int64 id = 1;       //包裹单号
+    // @Deprecated
+    string code = 2;        //物流单号
+    // @Deprecated
+    string status = 3;      //物流状态 (1688才有状态)
+    bool isWarehouse = 4;       //是否入库
+    // 包裹单号
+    string packageNo = 9;
+    // 物流名称
+    string expressCompanyName = 10;
+    // 物流code
+    string expressCompanyCode = 11;
+    // 物流单号
+    string expressBillNo = 20;
+    // 物流渠道号
+    string channelOrderId = 24;
+
+}
+
+message ChannelOrderLogisticsResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated ChannelOrderLogisticsResponse data = 5;
+}
+
+
+message ChannelOrderPackageIdRequest
+{
+    repeated string old = 1;     //包裹 id 集合
+}
+
+message AddPurchaseOrderRequest{
+    // 物流单号(运单号) -----必填
+    string expressBillNo = 1;
+    // 物流名称 -----必填
+    string expressCompanyName = 2;
+    // 物流code
+    string expressCompanyCode = 3;
+    // 包裹来源 1 1688 5 拼多多 6淘宝 -----必填
+    int32 packageSourceType = 4;
+    // 渠道订单商品详情 -----必填
+    repeated PurchaseOrderProductDetailRequest predictionDetails = 5;
+}
+
+message PurchaseOrderProductDetailRequest{
+    // 渠道订单号    -----必填
+    string channelOrderId = 1;
+    // 商品属性 格式："productAttribute": "[{\"name\":\"鞋码\",\"value\":\"38\"}"  -----必填
+    string productAttribute = 2;
+    // 商品图片 格式："productImg": "[\"http://image-free.momoso.com/store/20210918/614576d009b5bb2e9e226550.jpeg\"]"  -----必填
+    string productImg = 3;
+    // 商品名称 -----必填
+    string productName = 4;
+    // 销售订单号  -----必填
+    string salesOrderId = 5;
+    // itemId  -----必填
+    string itemId = 6;
+    // purchaseId  -----必填
+    string purchaseId = 7;
+    // sku  -----必填
+    string sku = 8;
+}
+message AddPurchaseOrderResult{
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated AddPurchaseOrderResponse data = 5;
+}
+message AddPurchaseOrderResponse{
+    // 物流单号(运单号)
+    string expressBillNo = 1;
+    // 销售订单号
+    string salesOrderId = 5;
+    // itemId
+    string itemId = 6;
+    // purchaseId
+    string purchaseId = 7;
+    bool success = 8;
+}
+
+message UpdatePurchasePackageRequest{
+    // purchaseId  -----必填
+    repeated string purchaseId = 7;
+}
+message UpdatePurchasePackageResult{
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated UpdatePurchasePackageResponse data = 5;
+}
+message UpdatePurchasePackageResponse{
+    string purchaseId = 7;
+    string message = 18;
+    bool success = 8;
+}
+service ChannelOrderLogistics{
+
+    rpc getChannelOrderLogistics(ChannelOrderLogisticsRequest) returns(ChannelOrderLogisticsResponseResult) {}       //根据渠道订单号，查询物流信息
+    rpc getChannerOrderIdByPackageId(ChannelOrderPackageIdRequest) returns(ChannerOrderIdResponseResult) {}       //根据包裹id 查询渠道订单号
+    rpc updateChannelOrderId(updateChannelOrderIdRequest) returns(updateChannelOrderIdResult) {}       //更新渠道订单号
+    rpc addPurchaseOrder(AddPurchaseOrderRequest) returns(AddPurchaseOrderResult){} // （鲸吞）增加采购订单
+    rpc updatePurchasePackage(UpdatePurchasePackageRequest) returns(UpdatePurchasePackageResult){}  //根据采购id更新预报包裹
+}

@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "ChannelOrderForDirectSendGTO";
+
+//------------------------------------------根据渠道订单号查询包裹------
+message ChannelOrderQueryForDirectSendRequest{
+  // 类型   2: AE  4： "CJ 发货单"  （必填）
+  int32 type = 22;
+  // 渠道订单号    必填
+  repeated string channelOrders = 1;
+}
+
+message ChannelOrderQueryForDirectSendResult{
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  repeated ChannelOrderQueryForDirectSendDetail data = 5;
+}
+
+message  ChannelOrderQueryForDirectSendDetail{
+  // 渠道订单号
+  string channelOrder = 1;
+  // 物流详情
+  repeated ChannelOrderQueryForDirectSendLogisticsInfo channelOrderForDirectSendLogisticsInfos = 2;
+}
+
+message ChannelOrderQueryForDirectSendLogisticsInfo{
+  // 销售订单号
+  string saleOrder = 1;
+  // 物流code
+  string logisticsCode = 9;
+  // 物流名称
+  string logisticsName = 10;
+  // 物流包裹号(本系统)
+  string logisticsOrderNo = 11;
+  // 运单号
+  string logisticsWayBillNo = 20;
+  // 跟踪号
+  string logisticsTrackingCode = 22;
+  // 物流状态
+  string logisticsStatus = 23;
+  // 物流渠道
+  string logisticsChannel = 24;
+  // 最新节点
+  string logisticsNodeCn = 25;
+  // 最新节点
+  string logisticsNodeEn = 26;
+  // 用户接受包裹时间
+  string receivingGoodTime = 27;
+}
+
+//----------------------------------------- 推送包裹
+
+message DeliveryPackageForDirectSendRequest{
+  // 类型    2: AE  4： "CJ 发货单"  （必填）
+  int32 type = 22;
+  repeated DeliveryPackageForDirectSend deliveryPackageList = 1;
+}
+
+message DeliveryPackageForDirectSend{
+  //关联销售订单id
+  string salesOrderId = 1;
+  //关联渠道订单 id
+  string channelOrderId = 2;
+  //物流收货国家
+  string logisticsArea = 3;
+  repeated  LogisticsParamForDirectSend logisticsList = 4;
+}
+
+message LogisticsParamForDirectSend{
+  //物流商编号   logistics_service
+  string logisticsCode = 1;
+  //物流跟踪单号 logistics_no
+  string logisticsTrackingCode = 2;
+  //物流状态
+  string logisticsStatus = 3;
+  string logisticsName = 4;       //物流商名称
+  string logisticsWaybillNo = 5;       //物流单号
+  string logisticsChannel = 6;       //物流渠道
+  string logisticsChannelStatus = 7;     //物流渠道状态
+}
+
+message DeliveryPackageForDirectSendResult {
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  repeated DeliveryPackageForDirectSendDetail data = 5;
+}
+
+message DeliveryPackageForDirectSendDetail{
+  string salesOrderId = 1;
+  string logisticsTrackingCode = 2;
+  string logisticsWaybillNo = 3;
+  bool success = 4;
+}
+
+service ChannelOrderForDirectSend{
+
+  rpc pushDeliveryPack(DeliveryPackageForDirectSendRequest) returns(DeliveryPackageForDirectSendResult) {}
+
+  rpc queryChannelOrderForDirectSend(ChannelOrderQueryForDirectSendRequest) returns(ChannelOrderQueryForDirectSendResult) {}
+}

@@ -1,0 +1,38 @@
+# define docker image when run job
+image: docker-registry.momoso.com/mms2/docker-build/maven:base
+
+# define job variables at job level
+variables:
+  MAVEN_CLI_OPTS: "-s /data/settings/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=/data/settings/repository"
+
+# define list of files that should be cached
+cache:
+  paths:
+    - /data/settings/repository
+
+# defines a job stage(default: test)
+stages:
+  - snapshots
+  - releases
+
+# define deploy job
+snapshots:
+  stage: snapshots
+  script:
+    - echo "======== start deploy ========"
+    - mvn $MAVEN_CLI_OPTS clean deploy -U -T 1C -Dmaven.test.skip=true -Dmaven.compile.fork=true
+  tags:
+    - java
+  only:
+    - /^feature_.*$/
+  
+releases:
+  stage: releases
+  script:
+    - echo "======== start deploy ========"
+    - mvn $MAVEN_CLI_OPTS clean deploy -P release -U -T 1C -Dmaven.test.skip=true -Dmaven.compile.fork=true
+  tags:
+    - java
+  only:
+    - /^release_.*$/

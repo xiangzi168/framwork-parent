@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.DepositorySaleOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.DepositorySaleOrderDO">
+        <id column="id" property="id" />
+        <result column="depository_code" property="depositoryCode" />
+        <result column="depository_name" property="depositoryName" />
+        <result column="sale_order" property="saleOrder" />
+        <result column="sale_notice" property="saleNotice" />
+        <result column="notice_fail_reason" property="noticeFailReason" />
+        <result column="prediction_content" property="predictionContent" />
+        <result column="prediction_count" property="predictionCount" />
+        <result column="remark" property="remark" />
+        <result column="cancel" property="cancel" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, depository_code, depository_name, sale_order, sale_notice, notice_fail_reason, prediction_content, prediction_count, remark, cancel, is_deleted, create_time, create_by, update_time, update_by
+    </sql>
+
+</mapper>

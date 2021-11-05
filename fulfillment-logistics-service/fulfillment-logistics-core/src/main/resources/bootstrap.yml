@@ -1,0 +1,108 @@
+#应用名称
+spring:
+  profiles:
+    active: dev
+  application:
+    name: fulfillment-logistics-service
+  cloud:
+    consul:
+      host: 10.0.0.109
+      port: 8500
+      config:
+        default-context: config
+        prefix: fulfillment
+        enabled: true
+        format: YAML
+        data-key: ${spring.profiles.active}
+
+
+  circuit:
+    enableRetry: false
+    enableFallback: false
+    retryTimes: 4
+    timeout: 5000
+    concurrentThread: 2000
+
+
+
+
+
+
+
+#应用端口
+server:
+  port: 8085
+
+
+
+grpc:
+  server:
+    port: 9095
+
+
+scheduler:
+  enabled: false
+  server:
+    addresses:
+  executor:
+    port: 7075
+
+
+swagger:
+  apiTitle: 物流服务API管理
+
+
+
+local:
+  debug: true
+
+logging:
+  level:
+    root: info
+    com:
+      amg:
+        fulfillment:
+          cloud:
+            logistics:
+              mapper: debug
+
+
+rocketmq:
+  listener:
+    enable: true
+
+
+---
+spring:
+  profiles: test
+
+
+scheduler:
+  enabled: true
+  server:
+    addresses:
+
+
+
+
+---
+spring:
+  profiles: prod
+
+
+scheduler:
+  enabled: false
+  server:
+    addresses:
+
+
+swagger:
+  enable: false
+knife4j:
+  production: true
+
+
+
+
+
+---

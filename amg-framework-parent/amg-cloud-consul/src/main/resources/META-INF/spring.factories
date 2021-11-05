@@ -1,0 +1,2 @@
+#初始化
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.amg.framework.cloud.consul.config.ConsulRetryAutoConfiguration

@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "LogisticsProviderGTO";
+
+message nullRequest {
+
+}
+
+message LogisticsRequest {
+    string logisticsCode = 1;     //物流商 code
+}
+
+message LogisticsRecommendRequest {
+    string logisticsCode = 1;     //物流商 code
+    LogisticsRecommendAddressRequest address = 2;       //地址信息
+    repeated LogisticsRecommendProductRequest productList = 3;      //商品信息
+}
+
+message LogisticsRecommendProductRequest {
+    string itemId = 1;      //item Id
+    string goodsId = 2;     //货物编号 sku
+    string goodsTitle = 3;      //货物描述
+    string declaredNameEn = 4;      //英文申报名称
+    string declaredNameCn = 5;      //中文申报名称
+    double declaredValue = 6;       //单件申报价值
+    double weight = 7;      //单件重量
+    string purchaseId = 8;      //采购 id
+    string categoryCode = 9 ;        //类目 code
+    string salePriceCny = 10 ;        //销售价格（元）
+}
+
+message LogisticsRecommendAddressRequest {
+    string firstName = 1;
+    string lastName = 2;
+    string company = 3;     //收件⼈公司
+    string street1 = 4;     //地址 1
+    string street2 = 5;     //地址 2
+    string city = 6;        //城市
+    string province = 7;        //省份/州
+    string postCode = 8;        //邮编
+    string countryCode = 9;     //国家代码 ISO 3166-1 alpha-2 标准
+    string tel = 10;     //电话
+    string email = 11;       //Email
+    string taxNumber = 12;       //寄件人税号（VOEC No/ VAT No）。若下单英国，请提供店铺VAT税号，税号规则为GB+9位数字
+}
+
+//getLogisticsRecommendProvider response
+message LogisticsProviderResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated  LogisticsProviderResponse data = 5;
+}
+
+message LogisticsChannelResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated  LogisticsChannelResponse data = 5;
+}
+
+message LogisticsProviderResponse {
+    bool recommendFlag = 1;     //是否推荐
+    int64 id = 2;
+    string logisticsCode = 3;       //物流商 code
+    string logisticsName = 4;       //物流商名称
+    string logisticsDesc = 5;       //物流商备注
+    repeated LogisticsChannelResponse channelList = 6;       //物流渠道信息
+}
+
+message LogisticsChannelResponse {
+    bool recommendFlag = 1;     //是否推荐
+    int64 id = 2;
+    string logisticsName = 3;       //物流商名称
+    string logisticsCode = 4;       //物流商 code
+    string channelName = 5;     //渠道名称
+    string channelCode = 6;     //渠道 code
+    double freight=7;    //渠道下对应的运费
+}
+service LogisticsProvider{
+
+    rpc getLogisticsProvider(nullRequest) returns(LogisticsProviderResponseResult) {}       //查询物流商信息
+
+    rpc getLogisticsChannel(LogisticsRequest) returns(LogisticsChannelResponseResult) {}       //查询物流渠道商信息
+
+    rpc getLogisticsRecommendProvider(LogisticsRecommendRequest) returns(LogisticsProviderResponseResult) {}       //查询推荐物流商信息
+
+    rpc getLogisticsRecommendChannel(LogisticsRecommendRequest) returns(LogisticsChannelResponseResult) {}       //查询推荐物流商渠道信息
+}

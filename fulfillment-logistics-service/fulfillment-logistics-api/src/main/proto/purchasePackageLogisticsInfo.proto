@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "purchasePackageLogisticsInfoGTO";
+
+message PurchasePackageLogisticsInfoRequest{
+     // 采购id
+    repeated string purchaseId = 1;
+}
+
+message PurchasePackageLogisticsInfoResult{
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated logisticsInfo data = 5;
+}
+
+message logisticsInfo{
+    string salesOrderId = 1;
+    string itemId = 2;
+    //采购ID
+    string purchaseId = 3;
+    // 包裹单号
+    string packageNo = 4;
+    // 物流code
+    string expressCompanyCode = 5;
+    string expressCompanyName = 6;
+    // 运单号
+    string expressBillNo = 7;
+    // 运单状态
+    string expressStatus = 8;
+}
+
+service PurchasePackageLogisticsInfo{
+  rpc getPurchasePackageLogisticsInfo(PurchasePackageLogisticsInfoRequest) returns(PurchasePackageLogisticsInfoResult) {}
+}

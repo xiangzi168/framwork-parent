@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsPurchaseProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsPurchaseProductDO">
+        <id column="id" property="id" />
+        <result column="package_id" property="packageId" />
+        <result column="sku" property="sku" />
+        <result column="sku_channel" property="skuChannel" />
+        <result column="product_name" property="productName" />
+        <result column="product_img" property="productImg" />
+        <result column="product_attribute" property="productAttribute" />
+        <result column="product_count" property="productCount" />
+        <result column="product_weight" property="productWeight" />
+        <result column="original_sku_code" property="originalSkuCode" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, package_id, sku, sku_channel, product_name, product_img, product_attribute, product_count, product_weight, original_sku_code, create_time, update_time
+    </sql>
+
+</mapper>

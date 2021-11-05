@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsTrackNodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsTrackNodeDO">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="logistics_code" property="logisticsCode" />
+        <result column="node" property="node" />
+        <result column="desc_cn" property="descCn" />
+        <result column="desc_en" property="descEn" />
+        <result column="inside_cn" property="insideCn" />
+        <result column="inside_en" property="insideEn" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+</mapper>

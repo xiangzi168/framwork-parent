@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsLabelCategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsLabelCategoryDO">
+        <id column="id" property="id" />
+        <result column="label_id" property="labelId" />
+        <result column="category_code" property="categoryCode" />
+        <result column="category_name" property="categoryName" />
+        <result column="category_level" property="categoryLevel" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, label_id, category_code, category_name, category_level
+    </sql>
+
+    <insert id="insertLogisticsLabelCategoryBatch" parameterType="java.util.List" >
+        insert into t_logistics_label_category (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.labelId}, #{item.categoryCode}, #{item.categoryName}, #{item.categoryLevel})
+        </foreach>
+    </insert>
+    
+    <update id="updateLogisticsLabelCategoryBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" open="" separator=";" close="" >
+            update t_logistics_label_category set category_code = #{item.categoryCode}, category_name = #{item.categoryName}, category_level = #{item.categoryLevel} where id = #{item.id}
+        </foreach>
+    </update>
+
+    <select id="queryLogisticsLabelCategoryList" parameterType="java.util.List" resultType="java.util.Map">
+        select a.id labelId, a.name labelName, b.category_code categoryCode
+        from t_logistics_label a, t_logistics_label_category b
+        where a.id = b.label_id and a.is_deleted = 0 and b.is_deleted = 0
+        and b.category_code in <foreach collection="list" item="item" open="(" separator="," close=")" > #{item} </foreach>
+    </select>
+
+</mapper>

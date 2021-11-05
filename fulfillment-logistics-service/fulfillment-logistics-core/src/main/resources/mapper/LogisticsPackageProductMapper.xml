@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsProductDO">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="relation_id" property="relationId" />
+        <result column="sku" property="sku" />
+        <result column="sku_channel" property="skuChannel" />
+        <result column="spu" property="spu" />
+        <result column="spu_channel" property="spuChannel" />
+        <result column="category_code" property="categoryCode" />
+        <result column="product_name" property="productName" />
+        <result column="product_img" property="productImg" />
+        <result column="product_attribute" property="productAttribute" />
+        <result column="product_count" property="productCount" />
+        <result column="product_weight" property="productWeight" />
+        <result column="product_declared_name_en" property="productDeclaredNameEn" />
+        <result column="product_declared_name_cn" property="productDeclaredNameCn" />
+        <result column="product_declared_price" property="productDeclaredPrice" />
+        <result column="product_status" property="productStatus" />
+        <result column="product_info" property="productInfo" />
+        <result column="real_product_weight" property="realProductWeight" />
+        <result column="real_product_count" property="realProductCount" />
+        <result column="refund_status" property="refundStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, type, relation_id, sku, category_code, product_name, product_img, product_attribute, product_count, product_weight, product_declared_name_en, product_declared_name_cn, product_declared_price, product_status, product_info, real_product_weight, real_product_count, refund_status
+    </sql>
+
+    <insert id="insertLogisticsProductBatch" parameterType="java.util.List">
+        insert into t_logistics_product (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.type}, #{item.relationId}, #{item.sku}, #{item.categoryCode}, #{item.productName}, #{item.productImg}, #{item.productAttribute}, #{item.productCount}, #{item.productWeight}, #{item.productDeclaredNameEn}, #{item.productDeclaredNameCn}, #{item.productDeclaredPrice}, #{item.productStatus}, #{item.productInfo}, #{item.realProductWeight}, #{item.realProductCount}, #{item.refundStatus})
+        </foreach>
+    </insert>
+</mapper>

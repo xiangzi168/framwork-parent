@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "SaleOrderStatusQueryGTO";
+
+/**
+* 根据销售订单查询itemId的状态属性
+ */
+
+
+message SaleOrderStatusQueryRequest{
+  // saleOrder 不能为null
+  repeated string saleOrder = 1;
+}
+
+message SaleOrderStatusQueryResponseResult{
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  repeated SaleOrderStatusQueryResponse data = 5;
+}
+
+message SaleOrderStatusQueryResponse{
+  string saleOrder = 1;
+  string itemId = 2;
+  string purchaseId = 3;
+  int32 status = 4;
+  string statusStr = 5;
+  string createTime = 6;
+  // 到仓时间(Deprecated)
+  string receiveTime = 7;
+  double weight = 8;
+  // 渠道订单 id
+  string channelOrderId = 9;
+  // 物流状态
+  int32 logisticsStatus = 13;
+  // 物流状态
+  string logisticsStatusStr = 14;
+  // 入库状态
+  int32 depositoryStatus = 15;
+  // 入库状态
+  string depositoryStatusStr = 16;
+  // 1 境外发货单  2 AE 发货单 3.备货
+  int32 type = 18;
+  // 采购渠道  1.1688  2. AE
+  string purchaseChannel = 19;
+  // 出库时间（仓库发出时间）
+  string deliveryTime = 100;
+  // 签收时间(客户签收时间)
+  string receivingGoodTime = 101;
+  // 揽收时间
+  string acceptTime = 102;
+  // 出库-系统订单号
+  string logisticsOrderNo = 103;
+  // 物流属性正对出库
+  repeated LogisticsProperty logisticsProperties = 20;
+  // 物流属性针对采购物流
+  repeated LogisticsPropertyForPurchase logisticsPropertyForPurchases = 104;
+}
+message LogisticsProperty{
+  // 物流code
+  string logisticsCode = 9;
+  // 物流名称
+  string logisticsName = 10;
+  // 物流订单号
+  string logisticsOrderNo = 11;
+  // 物流节点
+  string logisticsNode = 12;
+  // 运单号
+  string logisticsWayBillNo = 20;
+  // 运单号有效标识
+  string valid = 21;
+  // 跟踪号
+  string logisticsTrackingCode = 22;
+  // 是否揽收  0：未揽收 1：已揽收
+  int32 logisticsReceived = 23;
+}
+
+message LogisticsPropertyForPurchase{
+  // 系统记录的包裹单号
+  string packageNo = 1;
+  // 物流Code
+  string expressCompanyCode = 2;
+  // 物流名称
+  string expressCompanyName = 3;
+  // 物流编号
+  string expressCode = 4;
+  // 运单号
+  string expressBillNo = 5;
+  // 渠道订单号
+  string channelOrderId = 6;
+  // 发货时间 (1688发货时间)
+  string consignTime = 7;
+  // 签收时间 (1688物流的签收时间)
+  string signTime = 8;
+  // 揽收时间 (1688物流的揽收时间)
+  string acceptTime = 10;
+  // 入库时间 (仓库 入库时间)
+  string receivingGoodTime = 9;
+}
+
+service SaleOrderStatusQuery{
+  rpc querySaleOrderStauts(SaleOrderStatusQueryRequest) returns(SaleOrderStatusQueryResponseResult) {}
+
+  rpc querySaleOrderStautsForReport(SaleOrderStatusQueryRequest) returns(SaleOrderStatusQueryResponseResult) {}
+}
+

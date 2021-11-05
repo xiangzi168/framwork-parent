@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsPackageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsPackageDO">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="purchase_channel" property="purchaseChannel" />
+        <result column="sales_order_id" property="salesOrderId" />
+        <result column="channel_order_id" property="channelOrderId" />
+        <result column="delivery_package_type" property="deliveryPackageType" />
+        <result column="delivery_status" property="deliveryStatus" />
+        <result column="logistics_name" property="logisticsName" />
+        <result column="logistics_code" property="logisticsCode" />
+        <result column="logistics_channel" property="logisticsChannel" />
+        <result column="logistics_order_no" property="logisticsOrderNo" />
+        <result column="logistics_tracking_code" property="logisticsTrackingCode" />
+        <result column="logistics_channel_tracking_code" property="logisticsChannelTrackingCode" />
+        <result column="logistics_process_code" property="logisticsProcessCode" />
+        <result column="logistics_idnex_number" property="logisticsIdnexNumber" />
+        <result column="logistics_way_bill_no" property="logisticsWayBillNo" />
+        <result column="logistics_status" property="logisticsStatus" />
+        <result column="logistics_channel_status" property="logisticsChannelStatus" />
+        <result column="logistics_node" property="logisticsNode" />
+        <result column="logistics_area" property="logisticsArea" />
+        <result column="logistics_cost" property="logisticsCost" />
+        <result column="logistics_cost_currency" property="logisticsCostCurrency" />
+        <result column="logistics_weight" property="logisticsWeight" />
+        <result column="logistics_remark" property="logisticsRemark" />
+        <result column="battery" property="battery" />
+        <result column="battery_type" property="batteryType" />
+        <result column="package_info" property="packageInfo" />
+        <result column="error_info" property="errorInfo" />
+        <result column="cancel_remark" property="cancelRemark" />
+        <result column="delivery_time" property="deliveryTime" />
+        <result column="receiving_good_time" property="receivingGoodTime" />
+        <result column="is_valid" property="isValid" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+
+        <result column="channel_code" property="channelCode" />
+        <result column="channel_name" property="channelName" />
+        <result column="cj_logistics_status" property="cjLogisticsStatus" />
+        <result column="notice_user" property="noticeUser" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, type, purchase_channel, sales_order_id, channel_order_id, delivery_package_type, logistics_name, logistics_code, logistics_channel, logistics_order_no, logistics_tracking_code, logistics_process_code, logistics_idnex_number, logistics_status, logistics_channel_status, logistics_area, logistics_cost, logistics_cost_currency, logistics_weight, logistics_remark, battery, battery_type, receiving_good_time, package_info, error_info,create_by
+    </sql>
+
+    <select id="queryLogisticsPackageList" parameterType="com.amg.fulfillment.cloud.logistics.model.req.DeliveryPackageReq" resultMap="BaseResultMap" >
+        select a.id, a.type, a.purchase_channel, a.sales_order_id, a.channel_order_id, a.delivery_package_type, a.delivery_status, a.logistics_name, a.logistics_code, a.logistics_channel, a.logistics_order_no, a.logistics_tracking_code, a.logistics_channel_tracking_code, a.logistics_process_code, a.logistics_idnex_number, a.logistics_way_bill_no, a.logistics_status, a.logistics_channel_status, a.logistics_node, a.logistics_area, a.logistics_cost, a.logistics_cost_currency, a.logistics_weight, a.logistics_remark, a.battery, a.battery_type, a.package_info, a.error_info, a.cancel_remark, a.receiving_good_time, a.delivery_time, a.is_valid, a.is_deleted, a.create_time, a.create_by, a.update_time, a.update_by,
+            a.logistics_channel channel_code,a.accept_time,a.logistics_received,b.channel_name,a.cj_logistics_status,a.notice_user,a.create_by,a.update_by
+        from  t_logistics_package a left join t_logistics_channel b on a.logistics_code = b.logistics_code and a.logistics_channel = b.channel_code <if test="req.type == 1" > left join t_logistics_track_node c on a.logistics_node_en = c.node </if>
+        where a.is_deleted = 0
+        <if test="req.cjLogisticsStatus != null" > and a.cj_logistics_status = #{req.cjLogisticsStatus}</if>
+        <if test="req.noticeUser != null" > and a.notice_user = #{req.noticeUser}</if>
+        <if test="req.type != null" > and a.type = #{req.type}</if>
+        <if test="req.logisticsOrderNo != null and req.logisticsOrderNo != ''" > and a.logistics_order_no = #{req.logisticsOrderNo}</if>
+        <if test="req.logisticsProcessCode != null and req.logisticsProcessCode != ''" > and a.logistics_process_code = #{req.logisticsProcessCode}</if>
+        <if test="req.logisticsTrackingCode != null and req.logisticsTrackingCode != ''" > and a.logistics_tracking_code = #{req.logisticsTrackingCode}</if>
+        <if test="req.salesOrderId != null and req.salesOrderId != ''" > and a.sales_order_id = #{req.salesOrderId}</if>
+        <if test="req.logisticsCode != null and req.logisticsCode != ''" > and a.logistics_code = #{req.logisticsCode}</if>
+        <if test="req.channelCode != null and req.channelCode != ''" > and a.logistics_channel = #{req.channelCode}</if>
+        <if test="req.channelOrderId != null and req.channelOrderId != ''" > and a.channel_order_id = #{req.channelOrderId}</if>
+        <if test="req.logisticsReceived != null" > and a.logistics_received = #{req.logisticsReceived} </if>
+        <if test="req.type == 1" >    <!-- 1688  -->
+            <if test="req.logisticsLastNode != null and req.logisticsLastNode != ''" > and c.inside_en = #{req.logisticsLastNode} </if>        <!-- 物流节点 -->
+            <if test="req.logisticsProvider != null and req.logisticsProvider != ''" > and (b.logistics_code like concat(#{req.logisticsProvider}, '%') or b.logistics_name like concat(#{req.logisticsProvider}, '%'))</if>
+            <if test="req.logisticsChannel != null and req.logisticsChannel != ''" > and (b.channel_code like concat(#{req.logisticsChannel}, '%') or (b.channel_name like concat(#{req.logisticsChannel}, '%'))</if>
+        </if>
+        <if test="req.type == 2" >    <!-- AE  -->
+            <if test="req.logisticsLastNode != null and req.logisticsLastNode != ''" > and a.logistics_node = #{req.logisticsLastNode} </if>        <!-- 物流节点 -->
+            <if test="req.logisticsChannel != null and req.logisticsChannel != ''" > and a.logistics_channel like concat(#{req.logisticsChannel}, '%')</if>      <!-- 物流渠道 -->
+        </if>
+        <if test="req.country != null and req.country != ''" > and a.logistics_area = #{req.country}</if>
+        <if test="req.isValid != null" > and a.is_valid = #{req.isValid}</if>
+        <if test="req.deliveryStatus != null" > and a.delivery_status = #{req.deliveryStatus}</if>
+        <if test="req.startTime != null" > and a.create_time &gt;= #{req.startTime}</if>
+        <if test="req.endTime != null" > and a.create_time &lt;= #{req.endTime}</if>
+        <if test="req.startReceivingGoodTime != null" > and a.receiving_good_time &gt;= #{req.startReceivingGoodTime}</if>
+        <if test="req.endReceivingGoodTime != null" > and a.receiving_good_time &lt;= #{req.endReceivingGoodTime}</if>
+        <if test="req.startDeliveryTime != null" > and a.delivery_time &gt;= #{req.startDeliveryTime}</if>
+        <if test="req.endDeliveryTime != null" > and a.delivery_time &lt;= #{req.endDeliveryTime}</if>
+        <if test="req.startUpdateTime != null" > and a.update_time &gt;= #{req.startUpdateTime}</if>
+        <if test="req.endUpdateTime != null" > and a.update_time &lt;= #{req.endUpdateTime}</if>
+        <if test="req.logisticsWayBillNo != null and req.logisticsWayBillNo != ''" > and a.logistics_way_bill_no = #{req.logisticsWayBillNo}</if>
+        <if test="req.idList != null and req.idList.size() != 0"> and a.id in <foreach collection="req.idList" item="item" open="(" separator="," close=")" > #{item} </foreach> </if>
+        order by a.create_time desc
+    </select>
+
+    <insert id="insertLogisticsPackageBatch" parameterType="java.util.List" >
+        insert into t_logistics_package (<include refid="Base_Column_List" /> ) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.type}, #{item.purchaseChannel}, #{item.salesOrderId}, #{item.channelOrderId}, #{item.deliveryPackageType}, #{item.logisticsName}, #{item.logisticsCode}, #{item.logisticsChannel}, #{item.logisticsOrderNo}, #{item.logisticsTrackingCode}, #{item.logisticsProcessCode}, #{item.logisticsIdnexNumber}, #{item.logisticsStatus}, #{item.logisticsChannelStatus}, #{item.logisticsArea}, #{item.logisticsCost}, #{item.logisticsCostCurrency}, #{item.logisticsWeight}, #{item.logisticsRemark}, #{item.battery}, #{item.batteryType}, #{item.receivingGoodTime}, #{item.packageInfo}, #{item.errorInfo},#{item.createBy} )
+        </foreach>
+    </insert>
+
+
+    <select id="selectAboardStatistics" resultType="cn.hutool.core.lang.Pair">
+        SELECT  c.inside_en,count(*) as total
+        FROM t_logistics_package a
+        LEFT JOIN t_logistics_track_node c ON a.logistics_node_en = c.node
+        WHERE a.is_deleted = 0
+        AND a.type = 1
+        AND a.is_valid=1
+        AND a.create_time >= #{startDate} AND  a.create_time &lt;= #{endDate}
+        <if test="noticeUser != null">
+            AND notice_user = #{noticeUser}
+        </if>
+        AND c.inside_en IN
+        <foreach collection="statusList" item="item" open="(" separator="," close=")" >
+            #{item}
+        </foreach>
+        GROUP BY c.inside_en
+    </select>
+</mapper>

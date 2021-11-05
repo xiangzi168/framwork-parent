@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsRulesFreightMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsRulesFreightDO">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="logistics_code" property="logisticsCode" />
+        <result column="channel_code" property="channelCode" />
+        <result column="country" property="country" />
+        <result column="country_abbre" property="countryAbbre" />
+        <result column="start_weight" property="startWeight" />
+        <result column="end_weight" property="endWeight" />
+        <result column="pegistration_money" property="pegistrationMoney" />
+        <result column="unit_price" property="unitPrice" />
+        <result column="earliest_prescription_days" property="earliestPrescriptionDays" />
+        <result column="latest_prescription_days" property="latestPrescriptionDays" />
+        <result column="is_disable" property="isDisable" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+
+        <result column="logistics_name" property="logisticsName" />
+        <result column="channel_name" property="channelName" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, name, logistics_code, channel_code, country, country_abbre, start_weight, end_weight, pegistration_money, unit_price, earliest_prescription_days, latest_prescription_days, is_disable
+    </sql>
+
+    <select id="queryLogisticsRulesFreightList" parameterType="com.amg.fulfillment.cloud.logistics.model.req.LogisticsRulesFreightReq" resultMap="BaseResultMap" >
+        select a.id, a.name, a.logistics_code, a.country, a.country_abbre, a.start_weight, a.end_weight, a.pegistration_money, a.unit_price, a.earliest_prescription_days,
+        a.latest_prescription_days, a.is_disable, a.is_deleted, a.create_time, a.create_by, a.update_time, a.update_by,
+        b.logistics_name, b.channel_code, b.channel_name
+        from t_logistics_rules_freight a, t_logistics_channel b
+        where a.channel_code = b.channel_code
+        <if test="req.name != null and req.name != ''" > and a.name like concat(#{req.name}, '%')</if>
+        <if test="req.logisticsCode != null and req.logisticsCode != ''" > and a.logistics_code = #{req.logisticsCode}</if>
+        <if test="req.channelCode != null and req.channelCode != ''" > and a.channel_code = #{req.channelCode} </if>
+        <if test="req.logisticsProvider != null and req.logisticsProvider != ''" > and (a.logistics_code like concat(#{req.logisticsProvider}, '%') or b.logistics_name like concat(#{req.logisticsProvider}, '%'))</if>
+        <if test="req.logisticsChannel != null and req.logisticsChannel != ''" > and (a.channel_code like concat(#{req.logisticsChannel}, '%') or b.channel_name like concat(#{req.logisticsChannel}, '%'))</if>
+        <if test="req.country != null and req.country != ''" > and (a.country like concat(#{req.country}, '%') or a.country_abbre like concat(#{req.country}, '%'))</if>
+        <if test="req.isDisable != null"> and a.is_disable = #{req.isDisable}</if>
+        order by a.update_time desc
+    </select>
+
+    <select id="queryLogisticsRulesFreightById" parameterType="Long" resultMap="BaseResultMap" >
+        select a.id, a.name, a.logistics_code, a.country, a.country_abbre, a.start_weight, a.end_weight, a.pegistration_money, a.unit_price, a.earliest_prescription_days,
+        a.latest_prescription_days, a.is_disable, a.is_deleted, a.create_time, a.create_by, a.update_time, a.update_by,
+        b.logistics_name, b.channel_code, b.channel_name
+        from t_logistics_rules_freight a, t_logistics_channel b where a.channel_code = b.channel_code and a.id = #{id}
+        order by a.update_time desc
+    </select>
+
+    <insert id="insertLogisticsRulesFreightBatch" parameterType="java.util.List" >
+        insert into t_logistics_rules_freight (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.name}, #{item.logisticsCode}, #{item.channelCode}, #{item.country}, #{item.countryAbbre}, #{item.startWeight}, #{item.endWeight}, #{item.pegistrationMoney}, #{item.unitPrice}, #{item.earliestPrescriptionDays}, #{item.latestPrescriptionDays}, #{item.isDisable})
+        </foreach>
+    </insert>
+</mapper>

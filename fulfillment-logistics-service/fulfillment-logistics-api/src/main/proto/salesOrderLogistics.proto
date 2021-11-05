@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "SalesOrderLogisticsGTO";
+
+message SalesOrderPackageIdRequest {
+    repeated string packageIdList = 1;     //包裹 id 集合
+}
+
+message SalesOrderLogisticsRequest {
+    repeated string salesOrderIdList = 1;        //销售订单号
+}
+
+//getSalesOrderIdByPackageId response
+message SalesOrderIdResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated string data = 5;     //销售 id 集合
+}
+
+//getSalesOrderLogistics response
+message SalesOrderLogisticsResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated  SalesOrderLogisticsResponse data = 5;
+}
+
+message SalesOrderLogisticsResponse {
+    string salesOrderId = 1;
+    map<string, RepeatedSalesOrderLogisticsItemResponse> itemMap = 2;       // key   AE、 1688
+}
+
+message RepeatedSalesOrderLogisticsItemResponse
+{
+    repeated SalesOrderLogisticsItemResponse repeatedItem = 1;
+}
+
+message SalesOrderLogisticsItemResponse {
+    int64 id = 1;       //包裹单号
+    string itemId = 2;      //item id
+    string channelOrderId = 3;      //渠道订单 id
+    string logisticsName = 4;      //物流名称
+    string logisticsOrderNo = 5;        //物流订单号
+    string logisticsNode = 6;     //物流节点
+}
+
+//getSalesOrderLogisticsList response
+message SalesOrderLogisticsListResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated  SalesOrderLogisticsListResponse data = 5;
+}
+
+message SalesOrderLogisticsListResponse {
+    string salesOrderId = 1;
+    repeated RepeatedSalesOrderLogisticsItemListResponse itemList = 2;
+}
+
+message RepeatedSalesOrderLogisticsItemListResponse {
+    string logisticsName = 4;      //物流名称
+    string logisticsOrderNo = 5;        //物流订单号
+    string logisticsNode = 6;     //物流节点
+}
+
+service SalesOrderLogistics{
+
+    rpc getSalesOrderLogistics(SalesOrderLogisticsRequest) returns(SalesOrderLogisticsResponseResult) {}
+
+    rpc getSalesOrderLogisticsList(SalesOrderLogisticsRequest) returns(SalesOrderLogisticsListResponseResult) {}
+
+    rpc getSalesOrderIdByPackageId(SalesOrderPackageIdRequest) returns(SalesOrderIdResponseResult) {}       //根据包裹id 查询渠道订单号
+
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>com.amg</groupId>
+        <artifactId>amg-framework-parent</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+	
+    <artifactId>fulfillment-logistics-service</artifactId>
+    <packaging>pom</packaging>
+    
+
+    <version>${revision}</version>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <properties>
+                <revision>1.6.2-RELEASE</revision>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <revision>1.6.2-SNAPSHOT</revision>
+    </properties>
+
+
+    <modules>
+        <module>fulfillment-logistics-api</module>
+        <module>fulfillment-logistics-core</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Repository</name>
+            <url>https://nexus.cloudmall.dev/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>

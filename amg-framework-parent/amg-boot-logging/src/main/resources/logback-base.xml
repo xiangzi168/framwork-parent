@@ -1,0 +1,76 @@
+<included>
+
+    <contextListener class="com.amg.framework.boot.logging.listener.LoggerStartupListener"/>
+    <springProperty scope="context" name="env" source="spring.profiles.active" defaultValue="dev"/>
+    <contextName>${application}</contextName>
+    <property name="log.path" value="/data/logs/${application}/${application}" />
+
+    <logger name="org.springframework.web" level="ERROR" />
+    <logger name="org.springframework.boot" level="ERROR" />
+    <logger name="org.springframework.core" level="ERROR" />
+    <logger name="org.springframework.security" level="ERROR" />
+    <logger name="org.springframework.beans" level="ERROR" />
+    <logger name="org.springframework.amqp" level="ERROR" />
+    <logger name="org.springframework.data" level="ERROR" />
+    <logger name="org.springframework.context" level="ERROR" />
+    <logger name="org.springframework.jmx" level="ERROR" />
+    <logger name="org.springframework.jdbc" level="ERROR" />
+    <logger name="org.springframework.aop" level="ERROR" />
+    <logger name="org.springframework.integration" level="ERROR" />
+    <logger name="org.springframework.cloud.consul" level="ERROR" />
+    <logger name="com.netflix" level="ERROR" />
+    <logger name="org.apache.http" level="ERROR" />
+    <logger name="org.apache.rocketmq" level="WARN" />
+    <logger name="io.netty" level="ERROR" />
+    <logger name="com.ctrip" level="ERROR" />
+    <logger name="io.lettuce" level="ERROR" />
+    <logger name="org.quartz" level="ERROR" />
+    <logger name="springfox" level="ERROR" />
+    <logger name="io.grpc" level="ERROR" />
+    <logger name="net.devh" level="ERROR" />
+    <logger name="org.mongodb" level="ERROR" />
+    <logger name="com.xxl" level="ERROR" />
+    <logger name="com.ulisesbocchio" level="ERROR" />
+
+    <springProfile name="dev">
+        <!--开发环境debug日志-->
+        <include resource="default-file.xml"/>
+        <root>
+            <appender-ref ref="trace" />
+            <appender-ref ref="default_debug_async_file" />
+            <appender-ref ref="console" />
+        </root>
+    </springProfile>
+
+
+    <springProfile name="test">
+        <!--测试环境debug日志-->
+        <include resource="default-file.xml"/>
+        <root>
+            <appender-ref ref="trace" />
+            <appender-ref ref="default_debug_async_file" />
+            <appender-ref ref="console" />
+        </root>
+    </springProfile>
+
+
+    <springProfile name="prod">
+        <include resource="default-file.xml"/>
+        <!--生产环境debug日志-->
+        <include resource="prod-debug-file.xml"/>
+        <!--生产环境error日志-->
+        <include resource="prod-error-file.xml"/>
+        <root>
+            <appender-ref ref="trace" />
+            <appender-ref ref="prod_debug_async_file" />
+            <appender-ref ref="prod_error_async_file" />
+            <appender-ref ref="console" />
+        </root>
+    </springProfile>
+
+    <!-- 用来设置某一个包或者具体的某一个类的日志打印 -->
+    <!--<logger name="com.xx.xx.xx" level="WARN" additivity="false">-->
+    <!--<appender-ref ref="console"/>-->
+    <!--</logger>-->
+
+</included>

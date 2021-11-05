@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "LogisticsTrackGTO";
+
+message LogisticsTrackRequest {
+    string LogisticCode = 1;
+    string orderNo = 2;
+    string trackingNumber = 3;
+}
+message LogisticsTrackResponse {
+    string creatTime = 1;
+    string timeZone = 2;
+    string status = 3;
+    string content = 4;
+    string location = 5;
+}
+
+message LogisticsTrackResponseResult {
+    string errorCode = 1;
+    string msg = 2;
+    bool success = 3;
+    string requestId = 4;
+    repeated  LogisticsTrackResponse data = 5;
+}
+
+service LogisticsTrack{
+    rpc getLogisticsTrack(LogisticsTrackRequest) returns(LogisticsTrackResponseResult) {}
+}

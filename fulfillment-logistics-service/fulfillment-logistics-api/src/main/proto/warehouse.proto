@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package providerpb;
+import "google/api/annotations.proto";
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+service Warehouse {
+  // 预报入库包裹
+  rpc ForecastPackage(ForecastPackageRequest) returns (ForecastPackageReply);
+  // 出库包裹
+  rpc DispatchPackage(DispatchPackageRequest) returns (DispatchPackageReply);
+  // 推送备货库存信息
+  rpc ForecastStock(ForecastStockRequest) returns (ForecastStockReply);
+  // 推送备货采购订单信息
+  rpc ForecastStockPurchase(ForecastStockPurchaseRequest)
+      returns (ForecastStockPurchaseReply);
+  // 取消出库包裹
+  rpc CancelDispatchPackage(CancelDispatchPackageRequest)
+      returns (CancelDispatchPackageReply) {
+    option (google.api.http) = {
+      post : "/dispatch_orders/{package_kl_id}/cancellation"
+    };
+  }
+}
+
+message ForecastPackageRequest {
+  string package_kl_id = 1; // 入库包裹号
+}
+message ForecastPackageReply {}
+
+message DispatchPackageRequest {
+  string package_kl_id = 1; // 出库包裹号
+  string note = 2;          // 出库额外信息，是否发礼物
+}
+message DispatchPackageReply {}
+
+message CancelDispatchPackageRequest {
+  string package_kl_id = 1; // 出库包裹号
+}
+
+// Cancel Dispatch Package永不报错，错误信息在message里体现
+message CancelDispatchPackageReply { string message = 1; }
+
+// ForecastStockRequest
+message ForecastStockRequest { int64 sku_id = 1; }
+
+// ForecastStockReply ...
+message ForecastStockReply {}
+
+message ForecastStockPurchaseRequest {
+  repeated StockPurchaseEntity entities = 1;
+  string tracking_number = 2;
+}
+
+message StockPurchaseEntity {
+  int64 sku_id = 1;
+  int32 quantity = 2;
+}
+
+message ForecastStockPurchaseReply {}
+
+// Events: EventWarehouseCheckin
+message EventWarehouseCheckin {
+  string package_kl_id = 1;               // 入库包裹号
+  repeated CheckinItem checkin_items = 2; // 入库商品
+}
+
+message CheckinItem {
+  string item_kl_id = 1; // 入库商品号
+
+  int32 measured_weight = 2;      // unit in gram
+  repeated string photo_urls = 3; // 商品拍照
+
+  string exception_type = 4; // 异常类型
+  string exception_desc = 5; // 异常描述
+}
+
+// Events: EventWarehouseCheckout
+message EventWarehouseCheckout {
+  string package_kl_id = 1;       // 出库包裹号
+  int32 whole_package_weight = 2; // unit in gram
+  int32 length = 3;               // unit in mm
+  int32 width = 4;                // unit in mm
+  int32 height = 5;               // unit in mm
+  string material_id = 6;         // meterial used for the package
+
+  string exception_type = 7; // 异常类型
+  string exception_desc = 8; // 异常描述
+}

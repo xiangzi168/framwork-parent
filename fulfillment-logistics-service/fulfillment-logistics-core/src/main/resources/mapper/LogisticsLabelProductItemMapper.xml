@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsLabelProductItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsLabelProductItemDO">
+        <id column="id" property="id" />
+        <result column="product_id" property="productId" />
+        <result column="label_id" property="labelId" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+
+        <result column="name" property="name" />
+    </resultMap>
+
+
+    <insert id="insertLogisticsLabelProductItemBatch" parameterType="java.util.List" >
+        insert t_logistics_label_product_item (id, product_id, label_id) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.productId}, #{item.labelId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteLogisticsLabelProductItemByProductId" parameterType="java.lang.Long" >
+        delete from t_logistics_label_product_item where product_id = #{productId}
+    </delete>
+
+    <select id="queryLogisticsLabelProductItemListByProductIdList" parameterType="java.util.List" resultType="com.amg.fulfillment.cloud.logistics.entity.LogisticsLabelProductItemDO">
+        select a.id, a.product_id, a.label_id, b.name
+        from t_logistics_label_product_item a, t_logistics_label b
+        where a.label_id = b.id and a.is_deleted = 0 and b.is_deleted = 0
+        and a.product_id in <foreach collection="list" item="item" open="(" separator="," close=")"  > #{item}</foreach>
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "DepositoryStockGTO";
+
+message DepositoryStockDetailRequest{
+  // skus 不能为null
+  repeated string skus = 1;
+}
+
+message DepositoryStockDetailResponseResult{
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  repeated DepositoryStockDetailResponse data = 5;
+}
+
+message DepositoryStockDetailResponse{
+  //仓库代码
+  string warehouseCode = 1;
+  //库存类型 InStock 在库 InTransit 在途  InDefect 残次品
+  string type = 2;
+  //sku
+  string sku = 3;
+  //总库存
+  int32  totalQuantity = 4;
+  //冻结库存
+  int32  frozenQuantity = 5;
+  //锁定库存
+  int32  lockQuantity = 6;
+  //可⽤库存 (总库存 - 冻结库存 - 锁定库存)
+  int32  availableQuantity = 7;
+  //最后变更时间
+  string  lastModifyOn = 8;
+}
+
+service DepositoryStockQuery{
+  rpc querySaleOrderStauts(DepositoryStockDetailRequest) returns(DepositoryStockDetailResponseResult) {}
+}

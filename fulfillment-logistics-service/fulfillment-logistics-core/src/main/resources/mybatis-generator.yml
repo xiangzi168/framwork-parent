@@ -1,0 +1,52 @@
+globalConfig:
+  author: zzx
+  open: false
+  idType: INPUT
+  dateType: ONLY_DATE
+  enableCache: false
+  activeRecord: false
+  baseResultMap: true
+  baseColumnList: true
+  swagger2: true
+  fileOverride: true
+dataSourceConfig:
+  url: jdbc:mysql://10.0.0.110:3306/logistics-dev?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=true&serverTimezone=GMT%2B8
+  driverName: com.mysql.jdbc.Driver
+  username: root
+  password: BTWbzPgEkAblCSLu
+packageConfig:
+  parent: com.amg.fulfillment.cloud
+  moduleName: logistics
+  entity: entity
+  service: service
+  serviceImpl: service.impl
+  mapper: mapper
+  xml: mapper
+  controller: controller
+  pathInfo:
+    entity_path: src\main\java\com\amg\fulfillment\cloud\logistics\entity
+#    service_path: src\main\java\com\amg\fulfillment\cloud\logistics\service
+#    service_impl_path: src\main\java\com\amg\fulfillment\cloud\logistics\service\impl
+    mapper_path: src\main\java\com\amg\fulfillment\cloud\logistics\mapper
+    xml_path: src\main\resources\mapper
+#    controller_path: src\main\java\com\amg\fulfillment\cloud\logistics\controller
+strategyConfig:
+  naming: underline_to_camel
+  columnNaming: underline_to_camel
+  entityLombokModel: false
+  superMapperClass: com.baomidou.mybatisplus.core.mapper.BaseMapper
+  superServiceClass: com.baomidou.mybatisplus.extension.service.IService
+  superServiceImplClass: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+  controllerMappingHyphenStyle: true
+  restControllerStyle: false
+  tablePrefix: [t_]
+  versionFieldName: version
+#  entityTableFieldAnnotationEnable: true
+  include:
+#    - t_logistics_package_item
+#    - t_user
+#    - t_depository_sale_order
+#    - t_depository_sale_order_detail
+#    - t_depository_product
+#    - t_logistics_purchase_product
+    - t_test_current

@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "DeliveryPackageGTO";
+
+message DeliveryPackageRequest{
+  repeated PackageRequest deliveryPackageList = 1;
+}
+
+message PackageRequest{
+  //关联销售订单id
+  string salesOrderId = 1;
+  //关联渠道订单 id
+  string channelOrderId = 2;
+  //物流收货国家
+  string logisticsArea = 3;
+  repeated  LogisticsParamRequest logisticsList = 4;
+}
+
+message LogisticsParamRequest{
+  //物流商编号   logistics_service
+  string logisticsCode = 1;
+  //物流跟踪单号 logistics_no
+  string logisticsTrackingCode = 2;
+  //物流状态
+  string logisticsStatus = 3;
+}
+
+message DeliveryPackageResponseResult {
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  DeliveryPackageDetail data = 5;
+}
+
+message DeliveryPackageDetail{
+  string salesOrderId = 1;
+  string logisticsTrackingCode = 2;
+}
+
+service DeliveryPackage{
+  rpc pushAeLogisticsOrder(DeliveryPackageRequest) returns(DeliveryPackageResponseResult) {}
+}

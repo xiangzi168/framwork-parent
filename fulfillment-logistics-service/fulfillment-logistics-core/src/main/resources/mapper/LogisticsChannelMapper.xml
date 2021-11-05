@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsChannelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsChannelDO">
+        <id column="id" property="id" />
+        <result column="logistics_code" property="logisticsCode" />
+        <result column="logistics_name" property="logisticsName" />
+        <result column="channel_code" property="channelCode" />
+        <result column="channel_name" property="channelName" />
+        <result column="is_disable" property="isDisable" />
+        <result column="operational_behavior" property="operationalBehavior" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, logistics_code, logistics_name, channel_code, channel_name, is_disable, operational_behavior
+    </sql>
+
+</mapper>

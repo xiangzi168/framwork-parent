@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "OutDepositoryMsgGTO";
+
+message OutDepositoryMsgRequest {
+  // 仓库代码
+  string depositroyCode = 1;
+  // 订单号---必填
+  string orderId = 2;
+  // 采购订单号
+  string dispatchOrderId = 3;
+}
+
+message OutDepositoryMsgResult {
+  string errorCode = 1;
+  string msg = 2;
+  bool success = 3;
+  string requestId = 4;
+  OutDepositoryMsgDetail data = 5;
+}
+
+message OutDepositoryMsgDetail{
+  // 是否已出库
+  bool isShipped = 1;
+  string processOn = 2;
+  double weightInKg = 3;
+  string size = 4;
+  string materialId = 5;
+  string bagNo = 6;
+  repeated Item items = 7;
+  string failureReason = 8;
+}
+
+message Item{
+  string sku = 1;
+  string globalStockItemId = 2;
+  string globalEquipmentId = 3;
+}
+
+service OutDepositoryMsgService{
+  rpc getOutDepositoryMsg(OutDepositoryMsgRequest) returns(OutDepositoryMsgResult) {}
+}

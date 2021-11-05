@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsPurchasePackageErrorProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsPurchasePackageErrorProductDO">
+        <id column="id" property="id" />
+        <result column="product_id" property="productId" />
+        <result column="purchase_package_Id" property="purchasePackageId" />
+        <result column="purchase_id" property="purchaseId" />
+        <result column="sales_order_id" property="salesOrderId" />
+        <result column="error_purchase_id" property="errorPurchaseId" />
+        <result column="error_type" property="errorType" />
+        <result column="error_handle" property="errorHandle" />
+        <result column="error_message" property="errorMessage" />
+        <result column="error_img" property="errorImg" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+
+</mapper>

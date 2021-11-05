@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsPackageAddressMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsPackageAddressDO">
+        <id column="id" property="id" />
+        <result column="package_id" property="packageId" />
+        <result column="first_name" property="firstName" />
+        <result column="last_name" property="lastName" />
+        <result column="company" property="company" />
+        <result column="country_code" property="countryCode" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="street1" property="street1" />
+        <result column="street2" property="street2" />
+        <result column="post_code" property="postCode" />
+        <result column="tel" property="tel" />
+        <result column="email" property="email" />
+        <result column="tax_number" property="taxNumber" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, package_id, first_name, last_name, company, country_code, province, city, street1, street2, post_code, tel, email, tax_number
+    </sql>
+
+    <insert id="insertLogisticsPackageAddressBatch" parameterType="java.util.List" >
+        insert t_logistics_package_address (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" open="" separator="," close="" >
+            (#{item.id}, #{item.packageId}, #{item.firstName}, #{item.lastName}, #{item.company}, #{item.countryCode}, #{item.province}, #{item.city}, #{item.street1}, #{item.street2}, #{item.postCode}, #{item.tel}, #{item.email}, #{item.taxNumber})
+        </foreach>
+    </insert>
+
+</mapper>

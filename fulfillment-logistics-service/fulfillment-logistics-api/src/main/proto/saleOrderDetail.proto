@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "SaleOrderDetailGTO";
+
+message SaleOrderDetailRequest{
+    // 销售id 不能为null
+    string saleOrderId  = 1;
+    // 备注
+    string remark = 2;
+    // 商品详情 不能为null
+    repeated SaleOrderProduct products = 3;
+}
+
+message SaleOrderProduct{
+    // sku 不能为null
+    string sku = 1;
+    // 产品名称
+    string productName = 2;
+    // spu 不能为null
+    string spu = 3;
+    // itemId 不能为null
+    string itemId = 4;
+    // purchaseId 不能为null
+    string purchaseId = 5;
+    // 数量 不能为null
+    int32 quantity = 6;
+    // 产品规格
+    repeated ProductVariant variants = 7;
+    // 图⽚ jpg 或者 png 格式图⽚地址不⽀持 WebP 等非常规格式")
+    repeated string imageUrls = 8;
+    // 重量(g)
+    double weight = 9;
+    // skuChannel  1:临采1688、淘宝 2：AE 3:备货"
+    int32 skuChannel = 10;
+    // 订单来源(HPIOS、HPANDROID、HPWEB)
+    string orderFrom = 11;
+}
+
+message ProductVariant{
+    // sku 不能为null
+    string name = 1;
+    // value 不能为null
+    string value = 2;
+}
+
+message SaleOrderResponseResult {
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  SaleOrderResponseDetail data= 5;
+}
+
+message  SaleOrderResponseDetail{
+    string saleOrderId = 1;
+}
+
+service SaleOrderDetail{
+  rpc addSaleOrder(SaleOrderDetailRequest) returns(SaleOrderResponseResult) {}
+}

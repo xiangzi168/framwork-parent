@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "CommodityLabelGto";
+
+
+service CommodityLabel{
+
+  rpc getCommodityLabel(SkuListRequest) returns(CommodityLabelResult) {}       //根据渠道订单号，查询物流信息
+}
+
+
+message SkuListRequest
+{
+  repeated string sku = 1;     //需要查询的，履约内部SKU集合
+}
+
+
+
+message CommodityLabelResult
+{
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  CommodityLabelInfoList data = 5;     //商品标签信息集合
+}
+message CommodityLabelInfoList
+{
+  repeated CommodityLabelInfo commodityLabelInfo = 1;     //商品标签信息集合
+}
+
+message CommodityLabelInfo
+{
+  string sku = 1;     //需要查询的，履约内部SKU集合
+  repeated string msg=2; //信息
+}

@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+
+option java_package = "com.amg.fulfillment.cloud.logistics.api.proto";
+
+option java_outer_classname = "ManualOutDepositoryGTO";
+
+message ManualOutDepositoryRequest{
+  //-------物流信息
+  // 物流商标识号------必填   WB、YUNTU、YANWEN、PX4、
+  string logisticCode = 1;
+
+  //物流渠道
+  string channel = 2;
+
+  //销售订单号 必填
+  string salesOrderId = 3;
+
+  //渠道订单号 必填
+  repeated string channelOrderIdList = 4;
+
+  // 收件地址------必填
+  AddressDto receiverAddress = 5;
+
+  // 备注
+  string remark = 6;
+
+  // 包裹类型 包裹类型 DOC:文件 SPX:包裹
+  string packageType = 7;
+
+  // 运单商品详情------必填
+  repeated WaybillGoodDetailDto waybillGoodDetailDtos = 8;
+
+  // 是否带电池 1：是 2：否
+  int32 battery = 9;
+
+  // 电池类型  1:不带电  2:带电 3:纯电池
+  int32 batteryType = 10;
+
+   // 操作人id
+   int32 operationId = 11;
+   // 操作人
+   string operationer = 12;
+   // 操作时间
+   string operationTime = 13;
+  //仓库code  1测试 2万邦
+  int32 storageCode=14;
+}
+
+
+message AddressDto {
+  // 收件⼈名------必填
+  string firstName = 1;
+
+  string lastName = 2;
+
+  // 收件⼈公司
+  string  company = 4;
+  // 地址 1------必填
+  string  street1 = 5;
+  // 地址 2------必填
+  string  street2 = 6;
+  // 城市------必填
+  string  city = 7 ;
+  // 省份/州------必填
+  string  province = 8;
+  // 邮编------必填
+  string  postCode = 9 ;
+  // 国家代码------必填
+  string  countryCode = 10;
+  // 电话------必填
+  string  tel = 11 ;
+  // Email
+  string  email = 12;
+  // 寄件人税号
+  string  taxNumber = 13;
+}
+
+message WaybillGoodDetailDto{
+  // item id
+  string itemId = 1;
+  // 货物编号   sku
+  string goodsId = 2;
+  // 货物描述------必填
+  string goodsTitle = 3;
+  // 英文申报名称------必填
+  string declaredNameEn = 4;
+  // 中文申报名称------必填
+  string declaredNameCn = 5;
+  // 单件申报价值（美元）
+  double declaredValue = 6;
+  // 单件重量(g)
+  double weight = 7;
+  // sku 图片
+  string img = 8;
+  // sku 属性
+  string attribute = 9;
+  //采购 id
+  string purchaseId = 10;
+  //类目 code
+  string categoryCode = 11;
+   //销售价格（元）
+  string salePriceCny = 12;
+}
+
+
+message ManualOutDepositoryResponseResult {
+  string requestId = 1;
+  string errorCode = 2;
+  string msg = 3;
+  bool success = 4;
+  ManualOutDepositoryResponseDetail data = 5;
+}
+
+message ManualOutDepositoryResponseDetail{
+  // 仓库出库订单号
+  string  dispatchOrderId = 1;
+  // 物流订单号
+  string  logisticOrderId = 2;
+  // 物流跟踪号
+  string  logisticTrackingNumber = 3;
+  // 物流运单号
+  string  waybillNo = 4;
+  //出货状态  10待入库 20待处理 21已处理  22已入库  30已制单 31制单失败 40发货中 41已发货 42取消发货 43 发货失败
+  int32 statusCode = 5;
+  //出货异常 返回信息
+  string errorMsg = 6;
+}
+
+
+service ManualOutDepository{
+  rpc addOutDepository(ManualOutDepositoryRequest) returns(ManualOutDepositoryResponseResult) {}
+}

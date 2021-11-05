@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsStatusMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsStatusDO">
+        <id column="id" property="id" />
+        <result column="logistics_id" property="logisticsId" />
+        <result column="mail_no" property="mailNo" />
+        <result column="consign" property="consign" />
+        <result column="consign_time" property="consignTime" />
+        <result column="accept" property="accept" />
+        <result column="accept_time" property="acceptTime" />
+        <result column="transport" property="transport" />
+        <result column="transport_time" property="transportTime" />
+        <result column="delivering" property="delivering" />
+        <result column="delivering_time" property="deliveringTime" />
+        <result column="sign" property="sign" />
+        <result column="sign_time" property="signTime" />
+        <result column="logistics_status" property="logisticsStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, logistics_id, mail_no, consign, consign_time, accept, accept_time, transport, transport_time, delivering, delivering_time, sign, sign_time, logistics_status
+    </sql>
+
+</mapper>

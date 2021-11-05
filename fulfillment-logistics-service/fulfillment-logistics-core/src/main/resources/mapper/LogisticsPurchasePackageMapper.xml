@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsPurchasePackageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsPurchasePackageDO">
+        <id column="id" property="id"/>
+        <result column="status" property="status"/>
+        <result column="label" property="label"/>
+        <result column="prediction" property="prediction"/>
+        <result column="warehousing" property="warehousing"/>
+        <result column="express_company_name" property="expressCompanyName"/>
+        <result column="express_company_code" property="expressCompanyCode"/>
+        <result column="express_code" property="expressCode"/>
+        <result column="express_bill_no" property="expressBillNo"/>
+        <result column="expected_arrive" property="expectedArrive"/>
+        <result column="ship_from_province" property="shipFromProvince"/>
+        <result column="channel_order_id" property="channelOrderId"/>
+        <result column="deliver_good_time" property="deliverGoodTime"/>
+        <result column="receiving_good_time" property="receivingGoodTime"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="selectLogisticsStatusOnIdList"
+            resultType="com.amg.fulfillment.cloud.logistics.entity.LogisticsPackageMergeStatusDO">
+        SELECT *
+        FROM t_logistics_purchase_package as p
+        left JOIN t_logistics_status as s
+        on p.express_bill_no = s.mail_no
+        <where>
+            p.id
+        <if test="ids.size >0 ">
+            in
+            <foreach collection="ids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        </where>
+    </select>
+
+
+
+    <select id="selectListByFindInSet"
+            resultType="com.amg.fulfillment.cloud.logistics.entity.LogisticsPurchasePackageDO">
+        SELECT id,
+        package_no,
+        STATUS,
+        label,
+        prediction,
+        prediction_fail_reason,
+        warehousing,
+        express_company_name,
+        express_company_code,
+        express_code,
+        express_bill_no,
+        old_express_bill_no,
+        expected_arrive,
+        ship_from_province,
+        channel_order_id,
+        deliver_good_time,
+        receiving_good_time,
+        remark,
+        warehousing_feedback_action,
+        warehousing_purchase_reason,
+        warehousing_express_id,
+        warehousing_express_receive_time,
+        warehousing_express_image,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        prediction_time,
+        type_add
+        FROM t_logistics_purchase_package
+        WHERE valid=true
+        <if test="channelOrderIdList.size >0 ">
+            AND
+            <foreach collection="list" item="item" open="(" separator=" or " close=")">
+                find_in_set(#{item},channel_order_id)
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectLogisticsStatusExportList"
+            parameterType="com.amg.fulfillment.cloud.logistics.model.req.PurchasePackageReq"
+            resultType="com.amg.fulfillment.cloud.logistics.entity.LogisticsPackageMergeStatusDO">
+        SELECT *
+        FROM t_logistics_purchase_package as p
+        left JOIN t_logistics_status as s
+        on p.express_bill_no = s.mail_no
+        <where>
+            <!-- 包裹号 -->
+            <if test="packageNo!= null
+          and packageNo != ''">
+                package_no = #{packageNo}
+            </if>
+            <!-- 运单号 对应界面快递单号-->
+            <if test="expressBillNo != null
+          and expressBillNo != ''">
+                and express_bill_no = #{expressBillNo}
+            </if>
+            <!-- 包裹标签-->
+            <if test="label != null
+          ">
+                and label = #{label}
+            </if>
+            <!-- 是否入库-->
+            <if test="warehousing != null
+          ">
+                and warehousing = #{warehousing}
+            </if>
+            <!-- 快递公司名称-->
+            <if test="expressName != null
+          and expressName != ''">
+                and express_company_name = #{expressName}
+            </if>
+            <!-- 是否已经预报-->
+            <if test="prediction != null
+         ">
+                and prediction = #{prediction}
+            </if>
+            <!-- 是否已经人工创建-->
+            <if test="typeAdd != null
+         ">
+                and type_add = #{typeAdd}
+            </if>
+            <!-- 入库开始时间-->
+            <if test="startWarehousingTime != null
+          ">
+                and receiving_good_time &gt;= #{startWarehousingTime}
+            </if>
+            <!-- 入库结束时间-->
+            <if test="endWarehousingTime != null
+         ">
+                and receiving_good_time &lt;= #{endWarehousingTime}
+            </if>
+            <!-- 入库开始时间-->
+            <if test="startTime != null
+          ">
+                and create_time &gt;= #{startTime}
+            </if>
+            <!-- 入库结束时间-->
+            <if test="endTime != null
+          ">
+                and create_time &lt;= #{endTime}
+            </if>
+            <!-- 签收开始时间-->
+            <if test="startSignTime != null
+          ">
+                and s.sign_time &gt;= #{startSignTime}
+            </if>
+            <!-- 签收结束时间-->
+            <if test="endSignTime != null
+          ">
+                and s.sign_time &lt;= #{endSignTime}
+            </if>
+
+            <!-- 揽收开始时间-->
+            <if test="startAcceptTime != null
+         ">
+                and s.accept_time &gt;= #{startAcceptTime}
+            </if>
+            <!-- 揽收结束时间-->
+            <if test="endAcceptTime != null
+          ">
+                and s.accept_time &lt;= #{endAcceptTime}
+            </if>
+            <if test="logisticsStatus !=null
+          ">
+                and s.logistics_status=${logisticsStatus}
+            </if>
+            <if test="channelOrderId!= null
+          and channelOrderId != ''">
+                and channel_order_id like "%"#{channelOrderId}"%"
+            </if>
+            <if test="packageSourceType !=null
+          ">
+                <if test="packageSourceType ==0
+          ">
+                    and p.package_source_type in (5,6)
+                </if>
+                <if test="packageSourceType !=0
+          ">
+                    and p.package_source_type=${packageSourceType}
+                </if>
+            </if>
+            <if test="valid !=null">
+                and p.valid=${valid}
+            </if>
+        </where>
+        ORDER BY create_time desc
+    </select>
+
+
+
+    <select id="selectLogisticsStatusList"
+            parameterType="com.amg.fulfillment.cloud.logistics.model.req.PurchasePackageReq"
+            resultType="com.amg.fulfillment.cloud.logistics.entity.LogisticsPackageMergeStatusDO">
+        SELECT *
+        FROM t_logistics_purchase_package as p
+        left JOIN t_logistics_status as s
+        on p.express_bill_no = s.mail_no
+        <where>
+            <!-- 包裹号 -->
+            <if test="packageNo!= null
+          and packageNo != ''">
+                package_no = #{packageNo}
+            </if>
+            <if test="channelOrderId!= null
+          and channelOrderId != ''">
+             and channel_order_id like "%"#{channelOrderId}"%"
+            </if>
+            <!-- 运单号 对应界面快递单号-->
+            <if test="expressBillNo != null
+          and expressBillNo != ''">
+                and express_bill_no = #{expressBillNo}
+            </if>
+            <!-- 包裹标签-->
+            <if test="label != null
+          ">
+                and label = #{label}
+            </if>
+            <!-- 是否入库-->
+            <if test="warehousing != null
+          ">
+                and warehousing = #{warehousing}
+            </if>
+            <!-- 快递公司名称-->
+            <if test="expressName != null
+          and expressName != ''">
+                and express_company_name = #{expressName}
+            </if>
+            <!-- 是否已经预报-->
+            <if test="prediction != null
+         ">
+                and prediction = #{prediction}
+            </if>
+            <!-- 是否已经人工创建-->
+            <if test="typeAdd != null
+         ">
+                and type_add = #{typeAdd}
+            </if>
+
+            <!-- 入库开始时间-->
+            <if test="startWarehousingTime != null
+          ">
+                and receiving_good_time &gt;= #{startWarehousingTime}
+            </if>
+            <!-- 入库结束时间-->
+            <if test="endWarehousingTime != null
+         ">
+                and receiving_good_time &lt;= #{endWarehousingTime}
+            </if>
+            <!-- 创建开始时间-->
+            <if test="startTime != null
+          ">
+                and create_time &gt;= #{startTime}
+            </if>
+            <!-- 创建结束时间-->
+            <if test="endTime != null
+          ">
+                and create_time &lt;= #{endTime}
+            </if>
+            <!-- 签收开始时间-->
+            <if test="startSignTime != null
+          ">
+                and s.sign_time &gt;= #{startSignTime}
+            </if>
+            <!-- 签收结束时间-->
+            <if test="endSignTime != null
+          ">
+                and s.sign_time &lt;= #{endSignTime}
+            </if>
+
+            <!-- 揽收开始时间-->
+            <if test="startAcceptTime != null
+         ">
+                and s.accept_time &gt;= #{startAcceptTime}
+            </if>
+            <!-- 揽收结束时间-->
+            <if test="endAcceptTime != null
+          ">
+                and s.accept_time &lt;= #{endAcceptTime}
+            </if>
+            <if test="logisticsStatus !=null
+          ">
+                and s.logistics_status=${logisticsStatus}
+            </if>
+            <if test="packageSourceType !=null
+          ">
+                <if test="packageSourceType ==0
+          ">
+                    and p.package_source_type in (5,6)
+                </if>
+                <if test="packageSourceType !=0
+          ">
+                    and p.package_source_type=${packageSourceType}
+                </if>
+            </if>
+            <if test="valid !=null">
+            and p.valid=${valid}
+        </if>
+        </where>
+        ORDER BY create_time desc
+        limit #{page}
+        , #{row}
+    </select>
+
+    <select id="selectLogisticsStatusCount"
+            parameterType="com.amg.fulfillment.cloud.logistics.model.req.PurchasePackageReq"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_logistics_purchase_package as p
+        left JOIN t_logistics_status as s
+        on p.express_bill_no = s.mail_no
+        <where>
+            <!-- 包裹号 -->
+            <if test="packageNo!= null
+          and packageNo != ''">
+                package_no = #{packageNo}
+            </if>
+
+            <if test="channelOrderId!= null
+          and channelOrderId != ''">
+                and channel_order_id like "%"#{channelOrderId}"%"
+            </if>
+            <!-- 运单号 对应界面快递单号-->
+            <if test="expressBillNo != null
+          and expressBillNo != ''">
+                and express_bill_no = #{expressBillNo}
+            </if>
+            <!-- 包裹标签-->
+            <if test="label != null
+          ">
+                and label = #{label}
+            </if>
+            <!-- 是否入库-->
+            <if test="warehousing != null
+          ">
+                and warehousing = #{warehousing}
+            </if>
+            <!-- 快递公司名称-->
+            <if test="expressName != null
+          and expressName != ''">
+                and express_company_name = #{expressName}
+            </if>
+            <!-- 是否已经预报-->
+            <if test="prediction != null
+         ">
+                and prediction = #{prediction}
+            </if>
+            <!-- 是否已经人工创建-->
+            <if test="typeAdd != null
+         ">
+                and type_add = #{typeAdd}
+            </if>
+
+            <!-- 入库开始时间-->
+            <if test="startWarehousingTime != null
+          ">
+                and receiving_good_time &gt;= #{startWarehousingTime}
+            </if>
+            <!-- 入库结束时间-->
+            <if test="endWarehousingTime != null
+         ">
+                and receiving_good_time &lt;= #{endWarehousingTime}
+            </if>
+            <!-- 入库开始时间-->
+            <if test="startTime != null
+          ">
+                and create_time &gt;= #{startTime}
+            </if>
+            <!-- 入库结束时间-->
+            <if test="endTime != null
+          ">
+                and create_time &lt;= #{endTime}
+            </if>
+            <!-- 签收开始时间-->
+            <if test="startSignTime != null
+          ">
+                and s.sign_time &gt;= #{startSignTime}
+            </if>
+            <!-- 签收结束时间-->
+            <if test="endSignTime != null
+          ">
+                and s.sign_time &lt;= #{endSignTime}
+            </if>
+
+            <!-- 揽收开始时间-->
+            <if test="startAcceptTime != null
+         ">
+                and s.accept_time &gt;= #{startAcceptTime}
+            </if>
+            <!-- 揽收结束时间-->
+            <if test="endAcceptTime != null
+          ">
+                and s.accept_time &lt;= #{endAcceptTime}
+            </if>
+            <if test="logisticsStatus !=null
+          ">
+                and s.logistics_status=${logisticsStatus}
+            </if>
+            <if test="packageSourceType !=null
+          ">
+                <if test="packageSourceType ==0
+          ">
+                    and p.package_source_type in (5,6)
+                </if>
+                <if test="packageSourceType !=0
+          ">
+                    and p.package_source_type=${packageSourceType}
+                </if>
+            </if>
+            <if test="valid !=null">
+                and p.valid=${valid}
+            </if>
+        </where>
+    </select>
+</mapper>

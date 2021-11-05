@@ -1,0 +1,2 @@
+自定义ZuulFilter请求头策略
+实现ZuulHeaderStrategy接口并声明spring组件，处理逻辑放在apply方法

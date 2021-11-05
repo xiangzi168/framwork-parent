@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amg.fulfillment.cloud.logistics.mapper.LogisticsLabelProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.amg.fulfillment.cloud.logistics.entity.LogisticsLabelProductDO">
+        <id column="id" property="id" />
+        <result column="sku" property="sku" />
+        <result column="product_name" property="productName" />
+        <result column="product_img" property="productImg" />
+        <result column="product_attribute" property="productAttribute" />
+        <result column="operational_behavior" property="operationalBehavior" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, sku, product_name, product_img, product_attribute, operational_behavior
+    </sql>
+
+    <select id="queryLogisticsLabelProductListBySkuList" parameterType="java.util.List" resultType="java.util.Map" >
+        select a.id, b.label_id labelId, a.sku, a.product_name productName, c.name labelName
+        from t_logistics_label_product a, t_logistics_label_product_item b, t_logistics_label c
+        where a.id = b.product_id and b.label_id = c.id and a.is_deleted = 0 and b.is_deleted = 0 and c.is_deleted = 0
+        and a.sku in <foreach collection="list" item="item" open="(" separator="," close=")" > #{item} </foreach>
+    </select>
+</mapper>
